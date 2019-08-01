@@ -15,7 +15,7 @@ def computeSelfORA(node, proteinList):
     # nSet is the observed set   
     nSet = set(proteinList)
     n = len(nSet)
-    for cPath in node.traverse():       
+    for cPath in node.walk():       
         Kstates = set(cPath.getMembers())
         K = len( Kstates )
         print(f"{cPath.name} has {K} members")
@@ -54,7 +54,12 @@ def computeORA_BKG(node, proteinList, nodeBKG, verbose=False):
     nSet = set(proteinList)
     n = len(nSet)
     
-    for cPath in node.traverse():
+    pathwayPotential = 0
+    pathwayReal = 0
+    
+    for cPath in node.walk():
+        #print(f"Evaluating {cPath.name}")
+        pathwayPotential += 1
         #verbose = cPath.name == 'enzyme binding'
         if verbose:
             print(cPath.name)
@@ -77,7 +82,7 @@ def computeORA_BKG(node, proteinList, nodeBKG, verbose=False):
                 print("k_obs == 0")
             continue
         k = len(k_obs)
-        
+        pathwayReal += 1
         # Pour estimer le nombre de protéines non surAbondantes appartenant au pathway ou non
         # Nous utilisons la proporition de protéines du pathway ou non dans le protéome entier
         bkgPath = nodeBKG.getByName(cPath.name)
@@ -101,4 +106,6 @@ def computeORA_BKG(node, proteinList, nodeBKG, verbose=False):
         ORA_CDF.append( ( p, cPath) ) 
         
         cPath.set(Fisher=pValue, Hpg=p)
+
+    print(f"Evaluated {pathwayReal} / {pathwayPotential} Pathways, based on {n} proteins")
     return ORA_Fisher, ORA_CDF

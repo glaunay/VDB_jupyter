@@ -475,6 +475,9 @@ class AnnotationTree():
     def traverse(self):
         return self.root.traverse() 
     
+    def walk(self):
+        return self.root.walk() 
+    
     def as_json(self): # Should be collapsible
         return json.dumps(self.root)
 
@@ -549,7 +552,7 @@ class AnnotationTree():
 # A node may effectively be tested more than once
 # Given the operation cost associated with False predicate (terminate&return None), heap is unecessary
 # Given the operation cost associated with True predicate we effectively test the below tree once again
-    def drop(self, predicate):
+    def drop(self, predicate, noCollapse=False):
         t = AnnotationTree(self.NS[0])
         t.isDAG = self.isDAG
         t.collapsable = self.collapsable
@@ -560,6 +563,9 @@ class AnnotationTree():
         t.root = copy.deepcopy(self.root)
         t.root.children = [ c for c in t.root.children if c.mayDrop(predicate, noDropHeap) ]
         t.leafCountUpdate()
+        
+        if noCollapse:
+            return t
         return t.collapse()
        # return collapseTree(t)
     

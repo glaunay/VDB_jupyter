@@ -58,7 +58,6 @@ def computeORA_BKG(node, proteinList, nodeBKG, verbose=False):
     pathwayReal = 0
     
     for cPath in node.walk():
-        #print(f"Evaluating {cPath.name}")
         pathwayPotential += 1
         #verbose = cPath.name == 'enzyme binding'
         if verbose:

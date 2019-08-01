@@ -382,6 +382,9 @@ class AnnotationTree():
         #self.root.heap = self.nodeHeap
         self.NS = (annotType, enumNS[annotType])
      
+    def extract(self, *args):
+        self.read_DAG(*args)
+
     def read_DAG(self,uniprotIDList, uniprotCollection):      
         self.isDAG = True
         global GO_ONTOLOGY

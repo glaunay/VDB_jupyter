@@ -363,6 +363,20 @@ def getMembersByName(root, name):
     return list(s)
 '''
 
+def createGoTree(ns=None, proteinList=None, uniprotCollection=None, collapse=True) :
+    if not ns:
+        raise ValueError("Specify a namespace \"ns\"")
+    if not proteinList:
+        raise ValueError("Specify a list of proteins \"proteinList\"")
+    if not uniprotCollection:
+        raise ValueError("Specify a collection of uniport elements \"uniprotCollection\"")
+
+    print(f"Extracting {ns} ontology")
+
+    xpGoTree = AnnotationTree(ns, collapse=True)
+    xpGoTree.extract(proteinList, uniprotCollection)
+    return xpGoTree
+
 class AnnotationTree():
     def __init__(self, annotType,  collapse=False):
 

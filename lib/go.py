@@ -256,7 +256,7 @@ class Node():
 # Memoization implies the leaves of the subtree are already registred
 # API to perform search at current node, we clear the heap
 
-    def getMembers(self):
+    def getMembers(self, nr=False):
         getMemberHeap = kNodes()
         getMemberHeap.add(self)
 
@@ -264,7 +264,7 @@ class Node():
         for n in self.children:
             buff += n._getMembers(getMemberHeap)
         
-        return buff
+        return buff if not nr else list(set(buff))
 
     def _getMembers(self, _heap):
         if self.isDAGelem and self in _heap:
@@ -450,7 +450,7 @@ class AnnotationTree():
             
             
         n, l, p = self.dimensions
-        print(f"{n} leaves, {l} nodes, {p} proteins")
+        print(f"{n} GO terms, {l} leaves, {p} proteins")
 
     def read(self,uniprotIDList, uniprotCollection):      
         global GO_ONTOLOGY
@@ -520,28 +520,26 @@ class AnnotationTree():
         t.collapsable = True
         return t
 
-    def getMembersByName(self, name):
+    def getMembersByName(self, name, nr=True):
         node = self.root.getByName(name)
-        #print(node)
         m = node.getMembers()
-        s = set(m)
-        if not len(s) == len(m):
-            print(f"Warning : Current subTree holds multiple occurences of eTag")
+        if nr:
+            s = set(m)
+            return list(set(m)) 
 
-        return list(s)
-
-    def getMembersByID(self, name):
+        return list(m)
+       
+    def getMembersByID(self, name, nr=True):
         node = self.root.getByID(name)
         #print(node)
         m = node.getMembers()
-        s = set(m)
-        if not len(s) == len(m):
-            print(f"Warning : Current subTree holds multiple occurences of eTag")
-
-        return list(s)
+        if nr:
+            return list(set(m))
+        
+        return list(m)
 
     def getMembers(self):
-        return self.root.getMembers()
+        return self.root.getMembers(nr=True)
 
     def newRoot(self,  name=None, ID=None):
         if not name and not ID:

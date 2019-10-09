@@ -42,7 +42,11 @@ def righEnd_pValue(N, n, K, k):
     p_x = hypergeom(N, K, n).cdf([k - 1])
     return 1.00 - p_x[0]
 
-def computeORA_BKG(node, proteinList, nodeBKG, verbose=False):
+def computeORA(node, proteinList, nodeBKG, verbose=False):
+    Fisher, CDF = computeORA_BKG(node, proteinList, nodeBKG, verbose=verbose)
+    return Fisher
+
+def computeORA_BKG(node, proteinList, nodeBKG, verbose=False): # IDEM, mais avec un autre arbre de reference
     
     ORA_Fisher = []
     ORA_CDF = []

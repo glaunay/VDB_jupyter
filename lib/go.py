@@ -172,7 +172,12 @@ class Node():
         
         return [ { "id" : v["id"], "parentIds" : list( v["parentIds"] )}  for k,v in flat.items() ]
 
-
+    @property
+    def pvalue(self):
+        if 'Fisher' in self.features:
+            return self.features['Fisher']
+        return None
+        
 
     def set(self, **kwargs):
         for k,v in kwargs.items():

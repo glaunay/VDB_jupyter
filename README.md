@@ -9,16 +9,6 @@
 * Données tabulées de Spectrométrie de Masse
         * 3 mutants *E.Coli* dans 3 conditions
         * ~2000 protéines quantifiées.
-    
-
-<!---
-    * Présentation protéomique de masse.
-        * ciblée
-        * label-free
-    * MS data
-        * Données de *E. coli* (3 mutants x 3 conditions)
-        * ~2000 protéines quantifiées.
--->
 
 ### TP1
 

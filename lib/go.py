@@ -1,4 +1,5 @@
 from pyproteinsExt import ontology
+import uuid, os, pickle
 
 
 GO_ONTOLOGY = None
@@ -6,6 +7,16 @@ GO_ONTOLOGY = None
 def setOntology(file):
     global GO_ONTOLOGY
     GO_ONTOLOGY = OntologyGO(file)
+
+def ontologyDump(name, location):
+    name = str( uuid.uuid4() ) if not name else name
+    location = os.getcwd() if not location else location
+    fName = location + '/' + name + '.sqlite3'
+    print (f"Trying to open {fName}")
+    ontology.default_world.set_backend(filename = fName)
+    ontology.default_world.save()
+
+
 
 # DAG implemnetaion requires memoizing visited node
 # -> Any external accessor must be at the tree level, not at the node level avoid memoizing conflict
@@ -368,6 +379,28 @@ def getMembersByName(root, name):
     return list(s)
 '''
 
+def deserializeGoTree(fPickle, owlFile):
+    global GO_ONTOLOGY
+    if not GO_ONTOLOGY:
+        setOntology(owlFile)
+    
+    fp = open(fPickle, 'rb')
+    _self = pickle.load(fp)
+    fp.close()
+    for n in _self.walk():
+        if n.oNode is None:
+            print(f"Root found skipping::{n}\n")
+            continue
+        if isinstance(n.oNode, str):
+            termID = n.oNode#.replace('obo.', '').replace('_', ':')
+            termObj = GO_ONTOLOGY.onto.onto.search_one(id=termID)
+
+            if termObj is None:
+                raise TypeError(f"No GO Term matching::{termID}::From::{n}\n")
+            n.oNode =  termObj
+
+    return _self
+
 def createGoTree(ns=None, proteinList=None, uniprotCollection=None, collapse=True) :
     if not ns:
         raise ValueError("Specify a namespace \"ns\"")
@@ -400,7 +433,17 @@ class AnnotationTree():
         self.root = Node('0000', 'root') 
         #self.root.heap = self.nodeHeap
         self.NS = (annotType, enumNS[annotType])
-     
+
+    # Serialization requires pickling of object instance
+    # Ontology related term will be saved as string
+    # The ontology object will have to be reimported for deserialization
+
+    def makePickable(self):
+        _self = copy.deepcopy(self)
+        for n in _self.walk():
+            n.oNode = str(n.oNode).replace('obo.', '').replace('_', ':') if not n.oNode is None else None
+        return _self
+    
     def extract(self, *args):
         self.read_DAG(*args)
 

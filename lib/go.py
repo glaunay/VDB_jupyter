@@ -333,14 +333,15 @@ class Node():
         return self
 
     def _leafCountUpdate(self, _lcHeap):
-        #print(f"lcu {self.name} {len(_lcHeap)}")
+      #  print(f"lcu {self.name} {len(_lcHeap)}")
         if self.isDAGelem and self in _lcHeap:
-        #    print(f"{self.name} already updated")
+            #print(f"{self.name} already updated")
             return self
         _lcHeap.add(self)
 
         self.leafCount = len(self.getMembers())
         #print(f"{self.name} leafCount is {self.leafCount}")
+
         for c in self.children:
             c._leafCountUpdate(_lcHeap)
     
@@ -616,19 +617,18 @@ class AnnotationTree():
         t = AnnotationTree(self.NS[0])
         t.isDAG = self.isDAG
         t.collapsable = self.collapsable
-
-        
+ 
         noDropHeap = kNodes() # To store success and avoid restest subtree
 
         t.root = copy.deepcopy(self.root)
         t.root.children = [ c for c in t.root.children if c.mayDrop(predicate, noDropHeap) ]
+
+        if not noCollapse:
+            t = t.collapse()
         t.leafCountUpdate()
-        
-        if noCollapse:
-            return t
-        return t.collapse()
-       # return collapseTree(t)
-    
+
+        return t
+       
     def leafCountUpdate(self):
         lcHeap = kNodes()
 

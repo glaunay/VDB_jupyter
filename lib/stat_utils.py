@@ -1,6 +1,115 @@
 from scipy.stats import hypergeom
 from scipy.stats import fisher_exact
 import numpy as np
+import uniprot
+import go
+
+
+class GO_ORA_analyser():
+    def __init__(self, goOntologyFile, proteomeDirectory, experimentalProteinDirectory):
+        print("Loading ontology")
+        go.setOntology(goOntologyFile)
+        print("Reading whole proteome")
+        self.proteomeCollection = uniprot.UniprotCollection(proteomeDirectory)
+        print(f"{len(self.proteomeCollection)} Loaded")
+        print("reading experimental protein set")
+        self.xpCollection=uniprot.UniprotCollection(experimentalProteinDirectory)
+        print(f"{len(self.xpCollection)} Loaded")
+        self._xp_BP = None
+        self._bk_BP = None
+        
+        self._xp_MF = None 
+        self._bk_MF = None
+        
+        self._xp_CC = None
+        self._bk_CC = None
+        
+    def biological_process(self, selectedUniprotList):
+        ns = "biological process"
+        if not self._xp_BP:
+            print(f"Building {ns} GO Tree")
+            self._xp_BP = go.createGoTree(ns=ns, 
+                                          proteinList=selectedUniprotList, 
+                                          uniprotCollection=self.xpCollection)
+            _ = self.proteomeCollection.list
+            self._bk_BP = go.createGoTree(ns=ns, 
+                                          proteinList=_, 
+                                          uniprotCollection=self.proteomeCollection
+            )
+        Fisher_ORA = self._compute_ora(ns, self._xp_BP, self._bk_BP, selectedUniprotList)
+        return sorted(
+            [ (pValue, cPath.name, cPath.getMembers() ) for pValue, cPath in Fisher_ORA ],
+            key=lambda e:e[0]
+        )
+        #return self._compute_ora(ns, self._xp_BP, self._bk_BP, selectedUniprotList)
+        #pathWayRoot = self._xp_BP.getByName(ns)
+        #pathWayBKG  = self._bk_BP.getByName(ns)
+        #return computeORA(pathWayRoot, selectedUniprotList, pathWayBKG)
+     
+
+    def molecular_function(self, selectedUniprotList):
+        ns = "molecular function"
+        if not self._xp_MF:
+            print(f"{ns} process GO Tree")
+            self._xp_MF = go.createGoTree(ns=ns, 
+                                          proteinList=selectedUniprotList, 
+                                          uniprotCollection=self.xpCollection)
+            _ = self.proteomeCollection.list
+            self._bk_MF = go.createGoTree(ns=ns, 
+                                          proteinList=_, 
+                                          uniprotCollection=self.proteomeCollection
+            )
+        Fisher_ORA = self._compute_ora(ns, self._xp_MF, self._bk_MF, selectedUniprotList)
+        return sorted(
+            [ (pValue, cPath.name, cPath.getMembers() ) for pValue, cPath in Fisher_ORA ],
+            key=lambda e:e[0]
+        )
+        #return self._compute_ora(ns, self._xp_MF, self._bk_MF, selectedUniprotList)
+        #pathWayRoot = self._xp_MF.getByName(ns)
+        #pathWayBKG  = self._bk_MF.getByName(ns)
+        #return computeORA(pathWayRoot, selectedUniprotList, pathWayBKG)
+     
+    def cellular_component(self, selectedUniprotList):
+        ns = "cellular component"
+        if not self._xp_CC:
+            print(f"{ns} process GO Tree")
+            self._xp_CC = go.createGoTree(ns=ns, 
+                                          proteinList=selectedUniprotList, 
+                                          uniprotCollection=self.xpCollection)
+            _ = self.proteomeCollection.list
+            self._bk_CC = go.createGoTree(ns=ns, 
+                                          proteinList=_, 
+                                          uniprotCollection=self.proteomeCollection
+            )
+        
+        Fisher_ORA = self._compute_ora(ns, self._xp_CC, self._bk_CC, selectedUniprotList)
+        return sorted(
+            [ (pValue, cPath.name, cPath.getMembers() ) for pValue, cPath in Fisher_ORA ],
+            key=lambda e:e[0]
+        )
+        #return self._compute_ora(ns, self._xp_CC, self._bk_CC, selectedUniprotList)
+       # pathWayRoot = self._xp_CC.getByName(ns)
+        #pathWayBKG  = self._bk_CC.getByName(ns)
+        #return computeORA(pathWayRoot, selectedUniprotList, pathWayBKG)
+      
+    def _compute_ora(self, ns, tree_xp, tree_bk, selectedProteinList):
+        pathWayRoot = tree_xp.getByName(ns)
+        
+        #Définition du terme GO regroupant tout le protéome
+        pathWayBKG = tree_bk.getByName(ns)
+    #    print(pathWayRoot)
+    #    print(pathWayBKG)
+        #Calcul de l'enrichissement en termes GO successifs parmi les protéines surabondantes (ici, saList)
+        oraScores = computeORA(pathWayRoot, selectedProteinList, pathWayBKG)
+
+        return oraScores
+
+
+#xpGoTree_MF = go.createGoTree(ns="molecular function", proteinList=xpProtList, uniprotCollection=uniprotCollection)
+#fullEcoliGoTree_MF = go.createGoTree(ns="molecular function", proteinList=K12.list, uniprotCollection=K12)
+
+#xpGoTree_CC = go.createGoTree(ns="cellular component", proteinList=xpProtList, uniprotCollection=uniprotCollection)
+#fullEcoliGoTree_CC = go.createGoTree(ns="cellular component", proteinList=K12.list, uniprotCollection=K12)
 
 # Calcul la probabilité d'observer au moins k protéines membres de ce pathway 
 # parmi la liste de protéines fournie
@@ -89,6 +198,9 @@ def computeORA_BKG(node, proteinList, nodeBKG, verbose=False): # IDEM, mais avec
         # Pour estimer le nombre de protéines non surAbondantes appartenant au pathway ou non
         # Nous utilisons la proporition de protéines du pathway ou non dans le protéome entier
         bkgPath = nodeBKG.getByName(cPath.name)
+        if not bkgPath:
+            continue
+        #    raise ValueError(f"{cPath.name} not found in BKG")
         bkgPathFreq = len( set(bkgPath.getMembers()) ) / len(universe)  # Fraction du protéomes appartenant à ce Pathway
         nSA_Pa = int ( (o - k) * bkgPathFreq )
         nSA_nPa = int( (o - k) - nSA_Pa )
@@ -104,7 +216,7 @@ def computeORA_BKG(node, proteinList, nodeBKG, verbose=False): # IDEM, mais avec
         if verbose:
             print(f"{cPath.name} {TC} p={pValue} // pL={p}")
 
-        
+        _ = cPath.getMembers()
         ORA_Fisher.append( (pValue, cPath) ) 
         ORA_CDF.append( ( p, cPath) ) 
         

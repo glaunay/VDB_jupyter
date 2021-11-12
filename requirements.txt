@@ -1,0 +1,12 @@
+pandas
+networkx
+bs4
+biopython
+numpy
+lxml
+owlready2
+scipy
+matplotlib
+pyproteins == 1.5
+pyproteinsExt == 1.5
+ 

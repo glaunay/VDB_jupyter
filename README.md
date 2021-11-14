@@ -26,7 +26,7 @@
 ```
 
 Deux jeux de dépendances sont requis:
-1. hebergées sur pipy, à installez via `pip install -r requirements.txt`.
+1. hebergées sur pipy, à installer via `pip install -r requirements.txt`.
 2. locales au répertoire `lib`, à déclarer dans le notebook.
 
 ### TP1a

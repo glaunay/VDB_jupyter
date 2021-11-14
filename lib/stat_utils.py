@@ -38,7 +38,7 @@ class GO_ORA_analyser():
             )
         Fisher_ORA = self._compute_ora(ns, self._xp_BP, self._bk_BP, selectedUniprotList)
         return sorted(
-            [ (pValue, cPath.name, cPath.getMembers() ) for pValue, cPath in Fisher_ORA ],
+            [ (pValue, cPath.name, cPath.ID, cPath.getMembers() ) for pValue, cPath in Fisher_ORA ],
             key=lambda e:e[0]
         )
         #return self._compute_ora(ns, self._xp_BP, self._bk_BP, selectedUniprotList)
@@ -61,7 +61,7 @@ class GO_ORA_analyser():
             )
         Fisher_ORA = self._compute_ora(ns, self._xp_MF, self._bk_MF, selectedUniprotList)
         return sorted(
-            [ (pValue, cPath.name, cPath.getMembers() ) for pValue, cPath in Fisher_ORA ],
+            [ (pValue, cPath.name, cPath.ID, cPath.getMembers() ) for pValue, cPath in Fisher_ORA ],
             key=lambda e:e[0]
         )
         #return self._compute_ora(ns, self._xp_MF, self._bk_MF, selectedUniprotList)
@@ -84,7 +84,7 @@ class GO_ORA_analyser():
         
         Fisher_ORA = self._compute_ora(ns, self._xp_CC, self._bk_CC, selectedUniprotList)
         return sorted(
-            [ (pValue, cPath.name, cPath.getMembers() ) for pValue, cPath in Fisher_ORA ],
+            [ (pValue, cPath.name, cPath.ID, cPath.getMembers() ) for pValue, cPath in Fisher_ORA ],
             key=lambda e:e[0]
         )
         #return self._compute_ora(ns, self._xp_CC, self._bk_CC, selectedUniprotList)

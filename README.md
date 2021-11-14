@@ -10,55 +10,32 @@
         * 3 mutants *E.Coli* dans 3 conditions
         * ~2000 protéines quantifiées.
 
-### TP1
+### Mise en place de l'environnement
+* Telecharger le jeu de données auxilliare [ici](https://filesender.renater.fr/?s=download&token=13923b9f-94fa-47f8-8641-34afc781cb12)
 
-Lecture des données et manipulation avec la librairie [PANDAS](https://pandas.pydata.org/).
+* Vous l'extrairez dans ce repository `tar -xjf data_2021.tar.bz`
 
-* Parcours de DataFrame
-* Filtrage de DataFrame
-* Conversion type Python
+* L'organisation suivante est la plus simple 
+```
+-VDB_jupyter/
+        |_lib/
+        |_data/
+        |_exercices/
+        |_TCL_wt1.tsv
+        |_requirements.txt
+```
 
-Statistiques descriptives des données
+Deux jeux de dépendances sont requises:
+1. hebergées sur pipy, à installez via `pip install -r requirements.txt`.
+2. locales au répertoire `lib`, à déclarer dans le notebook.
 
-* Caractérisation des distributions
-* Représentations graphiques des distributions
+### TP1a
 
-Modelisation statistique des données
+- Lecture des données et manipulation avec la librairie [PANDAS](https://pandas.pydata.org/).
+- Manipulation des bibliothèques SciPy et Numpy
+- Production de figures matplotlib
 
-* Manipulation de la bibliothèque [SciPy](https://www.scipy.org/)
-* Représentations graphiques du modèle
+### TP1b
 
-### TP2
-
-Analyse de l'enrichissement en termes GO
-
-* Definitions de pathway fonctionels: modèle statistique
-* Manipulation de l'ontologie GO
-* Implémentation de l'analyse de l'enrichissement
-* Mise forme des résultats adaptée au notebook
-* Sérialisation des résultats
-
-### TP3
-
-Projection de données de types variées sur volcano plot
-
-* Desérialisation de données
-* Construction d'un scatter-plot élementaire
-* Modéle d'évenement matplotlib
-* Affichage des données point-spécifiques
-* Intégration des données d'annotations
-
-### TP4
-
-Librairie [Widget Jupyter](https://ipywidgets.readthedocs.io/en/latest/examples/Widget%20Basics.html)
-
-* Le modèle de widget
-* Association graphique widget avec interact
-* Construction d'une interface de visualisation
-
-### TP5
-
-Utilisation de la librairie [ete3](http://etetoolkit.org/)
-
-* Représentation en arbre de l'ontologie GO
-* Projection des différents résultats de l'analyse d'enrichissement sur la représentation graphique des arbres
+- Scatter-plot simple et avancé
+- Mise en forme riche d'objet dans le notebook

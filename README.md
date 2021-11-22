@@ -103,4 +103,9 @@ Deux jeux de dépendances sont requis:
 - Implémentation d'un volcano plot complexe
 
 
+### TP3
+- widgets Jupyter
+- layout Jupyter
+- exemple basé sur volcano-plot
+- projet libre
 

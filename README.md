@@ -95,3 +95,12 @@ Deux jeux de dépendances sont requis:
 
 - Scatter-plot simple et avancé
 - Mise en forme riche d'objet dans le notebook
+
+### TP2
+
+- Un premier volcano plot interactif
+- Rappel sur les palettes de couleurs
+- Implémentation d'un volcano plot complexe
+
+
+

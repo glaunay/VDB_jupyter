@@ -9,4 +9,6 @@ scipy
 matplotlib
 pyproteins == 1.5
 pyproteinsExt == 1.5
+ipympl
+
  

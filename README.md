@@ -67,7 +67,7 @@ poetry run ipython kernel install --user --name=<my_env>
         * ~2000 protéines quantifiées.
 
 ### Mise en place de l'environnement
-* Telecharger le jeu de données auxilliare [ici](https://filesender.renater.fr/?s=download&token=13923b9f-94fa-47f8-8641-34afc781cb12)
+* Telecharger le jeu de données auxilliare [ici](https://filesender.renater.fr/?s=download&token=9069cb84-ef8a-4253-9a6f-9cfe7559108f)
 
 * Vous l'extrairez dans ce repository `tar -xjf data_2021.tar.bz`
 
@@ -85,25 +85,27 @@ Deux jeux de dépendances sont requis:
 1. hebergées sur pipy, à installer via `pip install -r requirements.txt`.
 2. locales au répertoire `lib`, à déclarer dans le notebook.
 
-### TP1a
+### TP0
+ - Introduction à matplotlib
+### TP1
 
 - Lecture des données et manipulation avec la librairie [PANDAS](https://pandas.pydata.org/).
 - Manipulation des bibliothèques SciPy et Numpy
 - Production de figures matplotlib
 
-### TP1b
+### TP2
 
 - Scatter-plot simple et avancé
 - Mise en forme riche d'objet dans le notebook
 
-### TP2
+### TP3
 
 - Un premier volcano plot interactif
 - Rappel sur les palettes de couleurs
 - Implémentation d'un volcano plot complexe
 
 
-### TP3
+### TP4
 - widgets Jupyter
 - layout Jupyter
 - exemple basé sur volcano-plot

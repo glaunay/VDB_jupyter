@@ -3,7 +3,7 @@ from scipy.stats import fisher_exact
 import numpy as np
 import uniprot
 import go
-
+import sys
 
 class GO_ORA_analyser():
     def __init__(self, goOntologyFile, proteomeDirectory, experimentalProteinDirectory):
@@ -23,7 +23,29 @@ class GO_ORA_analyser():
         
         self._xp_CC = None
         self._bk_CC = None
+    
+    def get_background_proteins(self, name=None, ID=None):
+        if not name and not ID:
+            raise ValueError("You must specify a GO class name or ID")
+        try:
+            if name :
+                return self._bk_BP.getByName(name).eTag
+            return self._bk_BP.getByID(ID).eTag
+        except KeyError:
+            print(f"Go Term {name if name else ID} not found", file=sys.stderr)
+            return None
         
+    def get_experimental_proteins(self, name=None, ID=None):
+        if not name and not ID:
+            raise ValueError("You must specify a GO class name or ID")
+        try:
+            if name :
+                return self._xp_BP.getByName(name).eTag
+            return self._bk_BP.getByID(ID).eTag
+        except KeyError:
+            print(f"Go Term {name if name else ID} not found", file=sys.stderr)
+            return None
+
     def biological_process(self, selectedUniprotList):
         ns = "biological process"
         if not self._xp_BP:

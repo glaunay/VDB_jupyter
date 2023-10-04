@@ -111,3 +111,6 @@ Deux jeux de dépendances sont requis:
 - exemple basé sur volcano-plot
 - projet libre
 
+### TP5
+- Visualisation de réseaux avec networkx
+- Mise à jour interactive de réseaux
